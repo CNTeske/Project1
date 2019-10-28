@@ -23,17 +23,18 @@ create table ERS_Reimbursement_Status(
 );
 
 create table ERS_Reimbursement(
-	reimb_id integer primary key,
+	reimb_id serial primary key,
 	reimb_amount money,
-	reimb_submitted timestamp,
-	reimb_resolved timestamp,
+	reimb_submitted timestamp default current_timestamp,
+	reimb_resolved timestamp default null,
 	reimb_description varchar(250),
-	reimb_receipt bytea,
+	reimb_receipt bytea default null,
 	reimb_author integer references ERS_Users(ers_user_id),
-	reimb_resolver integer references ERS_Users(ers_user_id),
-	reimb_status integer references ERS_Reimbursement_Status(reimb_status_id),
+	reimb_resolver integer references ERS_Users(ers_user_id) default null,
+	reimb_status integer references ERS_Reimbursement_Status(reimb_status_id) default 1,
 	reimb_type integer references ERS_Reimbursement_Type(reimb_type_id)
 );
+drop table ers_reimbursement;
 
 insert into ers_reimbursement_type(reimb_type_id, reimb_type) values
 	(1, 'Lodging'),
@@ -67,4 +68,20 @@ create role finance_manager password 'manager_access';
 grant update on table ERS_Reimbursement to finance_manager;
 grant insert on table ERS_Reimbursement to finance_manager;
 grant select on table ERS_Reimbursement to finance_manager;
+
+-- Commands
+-- select ers_user_id from ers_users where ers_username = ? and ers_password = ?;
+select ers_user_id from ers_users where ers_username = 'ATanner' and ers_password = 'testpass1';
+-- select * from ers_reimbursement where reimb_author = ?;
+select * from ers_reimbursement where reimb_author = 1;
+--insert into ERS_Reimbursement (reimb_amount, reimb_description, reimb_author, reimb_type) values (?, ?, ?, ?);
+insert into ERS_Reimbursement (reimb_amount, reimb_description, reimb_author, reimb_type) values 
+(10.00::money, 'This is the description', 1, 2);
+select * from ers_reimbursement;
+--update ers_reimbursement set reimb_resolved = current_timestamp, reimb_resolver = ?, reimb_status = ? where reimb_id = ?;
+update ers_reimbursement set 
+reimb_resolved = current_timestamp, 
+reimb_resolver = 2, 
+reimb_status = 2
+where reimb_id = 1;
 
