@@ -45,6 +45,11 @@ insert into ers_user_roles(ers_user_role_id, user_role) values
 	(1, 'Employee'),
 	(2, 'Manager');
 
+insert into ers_reimbursement_status(reimb_status_id, reimb_status) values
+	(1, 'Pending'),
+	(2, 'Approved'),
+	(3, 'Denied');
+
 insert into ers_users (ers_user_id, ers_username, ers_password, user_first_name, user_last_name, user_email, user_role_id) values
 	(1, 'ATanner', 'testpass1', 'Albert', 'Tanner', 'alberttanner@email.com', 2),
 	(2, 'BPotter', 'testpass2', 'Betty', 'Potter', 'bettypotter@email.com', 2),
