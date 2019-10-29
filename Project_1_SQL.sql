@@ -60,14 +60,14 @@ insert into ers_users (ers_user_id, ers_username, ers_password, user_first_name,
 	(6, 'FCobbler', 'testpass6', 'Florence', 'Cobbler', 'florencecobbler@email.com', 1),
 	(7, 'GChandler', 'testpass7', 'George', 'Chandler', 'georgechandler@email.com', 1);
 
-create role employee LOGIN password 'userpass';
-grant insert on table ERS_Reimbursement to employee;
-grant select on table ERS_Reimbursement to employee;
+--create role employee LOGIN password 'userpass';
+--grant insert on table ERS_Reimbursement to employee;
+--grant select on table ERS_Reimbursement to employee;
 
-create role finance_manager password 'manager_access';
-grant update on table ERS_Reimbursement to finance_manager;
-grant insert on table ERS_Reimbursement to finance_manager;
-grant select on table ERS_Reimbursement to finance_manager;
+--create role finance_manager password 'manager_access';
+--grant update on table ERS_Reimbursement to finance_manager;
+--grant insert on table ERS_Reimbursement to finance_manager;
+--grant select on table ERS_Reimbursement to finance_manager;
 
 -- Commands
 -- select ers_user_id from ers_users where ers_username = ? and ers_password = ?;
@@ -76,7 +76,7 @@ select ers_user_id from ers_users where ers_username = 'ATanner' and ers_passwor
 select * from ers_reimbursement where reimb_author = 1;
 --insert into ERS_Reimbursement (reimb_amount, reimb_description, reimb_author, reimb_type) values (?, ?, ?, ?);
 insert into ERS_Reimbursement (reimb_amount, reimb_description, reimb_author, reimb_type) values 
-(10.00::money, 'This is the description', 1, 2);
+(10.00/*::money*/, 'This is the description', 1, 2);
 select * from ers_reimbursement;
 --update ers_reimbursement set reimb_resolved = current_timestamp, reimb_resolver = ?, reimb_status = ? where reimb_id = ?;
 update ers_reimbursement set 
