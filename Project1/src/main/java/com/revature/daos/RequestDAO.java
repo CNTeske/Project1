@@ -22,6 +22,7 @@ public class RequestDAO {
 		 // Completed, not tested
 		// Takes the generated request and adds it to the database.
 		int role = getRole(username, passcode);
+		int id = getID(username, passcode);
 		if (role == 1 || role == 2) {
 			try (Connection conn = ConnectToDB.getConnection(role)) {
 				String sql = "insert into ERS_Reimbursement (reimb_amount, reimb_description, "
@@ -29,7 +30,7 @@ public class RequestDAO {
 				PreparedStatement statement = conn.prepareStatement(sql);
 				statement.setBigDecimal(1, newRequest.getAmount());
 				statement.setString(2, newRequest.getDescription());
-				statement.setInt(3, newRequest.getAuthor());
+				statement.setInt(3, id);
 				statement.setInt(4, newRequest.getType());
 				ResultSet resultSet = statement.executeQuery();
 				while (resultSet.next()) {
@@ -49,12 +50,13 @@ public class RequestDAO {
 		int role = getRole(username, passcode);
 		if (role == 2) {
 			try (Connection conn = ConnectToDB.getConnection(role)) {
+				int id = getID(username, passcode);
 				String sql = "update ers_reimbursement set reimb_resolved = current_timestamp, "
 						+ "reimb_resolver = ?, reimb_status = ? where reimb_id = ? returning *;";
 				PreparedStatement statement = conn.prepareStatement(sql);
 				statement.setInt(1, oldRequest.getResolver());
 				statement.setInt(2, oldRequest.getStatus());
-				statement.setInt(3, oldRequest.getId());
+				statement.setInt(3, id);
 				ResultSet resultSet = statement.executeQuery();
 				while (resultSet.next()) {
 					oldRequest = unpack(resultSet);
@@ -125,6 +127,24 @@ public class RequestDAO {
 		return 0;
 	}
 
+	public int getID(String username, String passcode) { // Completed, tested
+		// Authorizes the above commands by determining the user's role.
+		try (Connection conn = ConnectToDB.getConnection(1)) {
+			String sql = "select user_id from ers_users where ers_username = ? and ers_password = ?;";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, username);
+			statement.setString(2, passcode);
+			ResultSet resultSet = statement.executeQuery();
+			int id = 0;
+			while (resultSet.next()) {
+				id = resultSet.getInt("user_id");
+			}
+			return id;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
 	private ERS_Request unpack(ResultSet resultSet) { // Completed, not tested
 		try {
 			int id = resultSet.getInt("reimb_id");
