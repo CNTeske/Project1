@@ -108,20 +108,21 @@ public class RequestDAO {
 
 	public int getRole(String username, String passcode) { // Completed, tested
 		// Authorizes the above commands by determining the user's role.
-		int role = 1;
-		try (Connection conn = ConnectToDB.getConnection(role)) {
+		try (Connection conn = ConnectToDB.getConnection(1)) {
 			String sql = "select user_role_id from ers_users where ers_username = ? and ers_password = ?;";
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, username);
 			statement.setString(2, passcode);
 			ResultSet resultSet = statement.executeQuery();
+			int role = 0;
 			while (resultSet.next()) {
 				role = resultSet.getInt("user_role_id");
 			}
+			return role;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return role;
+		return 0;
 	}
 
 	private ERS_Request unpack(ResultSet resultSet) { // Completed, not tested

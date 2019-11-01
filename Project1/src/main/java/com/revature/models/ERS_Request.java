@@ -178,4 +178,7 @@ public class ERS_Request {
 		this.status = status;
 		this.type = type;
 	}
+	public ERS_Request() {
+		super();
+	}
 }

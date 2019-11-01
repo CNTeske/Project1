@@ -13,7 +13,17 @@
 		<servlet-class>com.revature.servlets.SessionServlet</servlet-class>
 	</servlet>
 
+	<servlet>
+		<servlet-name>TestServlet</servlet-name>
+		<servlet-class>com.revature.servlets.TestServlet</servlet-class>
+	</servlet>
 
+
+	<servlet-mapping>
+		<servlet-name>TestServlet</servlet-name>
+		<url-pattern>/test</url-pattern>
+	</servlet-mapping>
+	
 	<servlet-mapping>
 		<servlet-name>SessionServlet</servlet-name>
 		<url-pattern>/session</url-pattern>
