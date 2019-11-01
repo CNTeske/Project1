@@ -63,6 +63,8 @@ insert into ers_users (ers_user_id, ers_username, ers_password, user_first_name,
 --create role employee LOGIN password 'userpass';
 --grant insert on table ERS_Reimbursement to employee;
 --grant select on table ERS_Reimbursement to employee;
+grant select on table ers_users to employee;
+grant all privileges on all sequences in schema public to employee;
 
 --create role finance_manager password 'manager_access';
 --grant update on table ERS_Reimbursement to finance_manager;
