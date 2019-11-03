@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,13 +46,27 @@ public class ERSServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		String username = (String) session.getAttribute("username");
-		String passcode = (String) session.getAttribute("passcode");
+		
+		
+//		Cookie[] cookies = request.getCookies();
+//		String username = "";
+//		String password = "";
+//		for(Cookie c:cookies) {
+//			if(c.getName().equals("username")) username = c.getValue();
+//			if(c.getName().equals("password")) password = c.getValue();
+//		}
+		
+		
+//		String username = (String) session.getAttribute("username");
+//		String password = (String) session.getAttribute("password");
+		
+		String username = "ATanner";
+		String password = "testpass1";
 		ObjectMapper om = new ObjectMapper();
 		ERS_Request req = om.readValue(request.getReader(), ERS_Request.class);
-		req = reqService.save(req, username, passcode);
+		req = reqService.save(req, username, password);
 		om.writeValue(response.getWriter(), req);
-
+		
 	}
 
 }

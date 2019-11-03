@@ -19,10 +19,12 @@ import com.revature.models.ERS_Request;
 public class RequestDAO {
 
 	public ERS_Request createRequest(String username, String passcode, ERS_Request newRequest) {
-		 // Completed, not tested
+		// Completed, not tested
 		// Takes the generated request and adds it to the database.
 		int role = getRole(username, passcode);
 		int id = getID(username, passcode);
+		System.out.println(id);
+		System.out.println(role);
 		if (role == 1 || role == 2) {
 			try (Connection conn = ConnectToDB.getConnection(role)) {
 				String sql = "insert into ERS_Reimbursement (reimb_amount, reimb_description, "
@@ -45,7 +47,7 @@ public class RequestDAO {
 	}
 
 	public ERS_Request modifyRequest(String username, String passcode, ERS_Request oldRequest) {
-		 // Completed, not tested
+		// Completed, not tested
 		// Verifies user has permission, updates request in the database.
 		int role = getRole(username, passcode);
 		if (role == 2) {
@@ -137,7 +139,7 @@ public class RequestDAO {
 			ResultSet resultSet = statement.executeQuery();
 			int id = 0;
 			while (resultSet.next()) {
-				id = resultSet.getInt("user_id");
+				id = resultSet.getInt("ers_user_id");
 			}
 			return id;
 		} catch (SQLException e) {
@@ -145,29 +147,27 @@ public class RequestDAO {
 		}
 		return 0;
 	}
+
 	private ERS_Request unpack(ResultSet resultSet) { // Completed, not tested
 		try {
 			int id = resultSet.getInt("reimb_id");
-			String amountString = resultSet.getString("reimb_amount");
-			amountString = amountString.substring(1).replace(",", "");
-			BigDecimal amount = new BigDecimal("");
+//			String amountString = resultSet.getString("reimb_amount");
+//			amountString = amountString.substring(1).replace(",", "");
+			BigDecimal amount = resultSet.getBigDecimal("reimb_amount");
 			Timestamp submitted = resultSet.getTimestamp("reimb_submitted");
 			Timestamp resolved = resultSet.getTimestamp("reimb_resolved");
 			String description = resultSet.getString("reimb_description");
 			byte[] receiptArray = resultSet.getBytes("reimb_receipt");
-			BufferedImage receipt = ImageIO.read(new ByteArrayInputStream(receiptArray));
+//			BufferedImage receipt = ImageIO.read(new ByteArrayInputStream(receiptArray));
 			int author = resultSet.getInt("reimb_author");
 			Integer resolver = resultSet.getInt("reimb_resolver");
 			int status = resultSet.getInt("reimb_status");
 			int type = resultSet.getInt("reimb_type");
 
-			ERS_Request request = new ERS_Request(id, amount, submitted, resolved, description, receipt, author,
-					resolver, status, type);
+			ERS_Request request = new ERS_Request(id, amount, submitted, resolved, description, null, author, resolver,
+					status, type);
 			return request;
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
