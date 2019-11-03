@@ -24,7 +24,12 @@ public class ERSServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-
+	public void service(HttpServletRequest request, 
+            HttpServletResponse response) throws ServletException, IOException {     
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Headers", "*");
+        super.service(request, response);
+	}
 	ReqService reqService = new ReqService();
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)

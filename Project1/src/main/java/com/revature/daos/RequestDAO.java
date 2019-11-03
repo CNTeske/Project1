@@ -130,7 +130,7 @@ public class RequestDAO {
 	public int getID(String username, String passcode) { // Completed, tested
 		// Authorizes the above commands by determining the user's role.
 		try (Connection conn = ConnectToDB.getConnection(1)) {
-			String sql = "select user_id from ers_users where ers_username = ? and ers_password = ?;";
+			String sql = "select ers_user_id from ers_users where ers_username = ? and ers_password = ?;";
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, username);
 			statement.setString(2, passcode);
