@@ -35,9 +35,9 @@ public class ERSServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		String username = (String) session.getAttribute("username");
-		String passcode = (String) session.getAttribute("passcode");
+		//HttpSession session = request.getSession();
+		String username = "ATanner";//(String) session.getAttribute("username");
+		String passcode = "testpass1";//(String) session.getAttribute("passcode");
 		ObjectMapper om = new ObjectMapper();
 		List<ERS_Request> reqList = reqService.view(username, passcode);
 		om.writeValue(response.getWriter(), reqList);

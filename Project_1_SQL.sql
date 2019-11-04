@@ -64,12 +64,13 @@ insert into ers_users (ers_user_id, ers_username, ers_password, user_first_name,
 --grant insert on table ERS_Reimbursement to employee;
 --grant select on table ERS_Reimbursement to employee;
 grant select on table ers_users to employee;
-grant all privileges on all sequences in schema public to employee;
-
+grant all privileges on all sequences in schema public to finance_manager;
+ALTER ROLE finance_manager NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;
 --create role finance_manager password 'manager_access';
 --grant update on table ERS_Reimbursement to finance_manager;
 --grant insert on table ERS_Reimbursement to finance_manager;
 --grant select on table ERS_Reimbursement to finance_manager;
+grant select on table ers_users to finance_manager;
 
 -- Commands
 -- select ers_user_id from ers_users where ers_username = ? and ers_password = ?;
