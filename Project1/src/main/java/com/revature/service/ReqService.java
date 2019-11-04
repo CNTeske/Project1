@@ -4,22 +4,22 @@ import java.util.List;
 
 import com.revature.daos.RequestDAO;
 import com.revature.models.ERS_Request;
+import com.revature.models.User;
 
 public class ReqService {
 	RequestDAO dao = new RequestDAO();
 	
-	public ERS_Request save(ERS_Request req, String username, String passcode) {
+	public ERS_Request save(ERS_Request req, int userid) {
 		if (req.getResolver() == null) {
-			req = dao.createRequest(username, passcode, req);
+			req = dao.createRequest(userid, req);
 		} else {
-			req = dao.modifyRequest(username, passcode, req);
+			req = dao.modifyRequest(userid, req);
 		}
-		System.out.println(username + passcode);
 		return req;
 		
 	}
-	public List<ERS_Request> view(String username, String passcode){
-		List<ERS_Request> reqList = dao.viewRequest(username, passcode);
+	public List<ERS_Request> view(User user){
+		List<ERS_Request> reqList = dao.viewRequest(user);
 		return reqList;
 	}
 

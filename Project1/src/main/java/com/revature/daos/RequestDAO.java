@@ -1,8 +1,5 @@
 package com.revature.daos;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,21 +9,14 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 
 import com.revature.models.ERS_Request;
+import com.revature.models.User;
 
 public class RequestDAO {
 
-	public ERS_Request createRequest(String username, String passcode, ERS_Request newRequest) {
-		// Completed, not tested
-		// Takes the generated request and adds it to the database.
-		int role = getRole(username, passcode);
-		int id = getID(username, passcode);
-		System.out.println(id);
-		System.out.println(role);
-		if (role == 1 || role == 2) {
-			try (Connection conn = ConnectToDB.getConnection(role)) {
+	public ERS_Request createRequest(int id, ERS_Request newRequest) {
+			try (Connection conn = ConnectToDB.getConnection(1)) {
 				String sql = "insert into ERS_Reimbursement (reimb_amount, reimb_description, "
 						+ "reimb_author, reimb_type) values (?, ?, ?, ?) returning *;";
 				PreparedStatement statement = conn.prepareStatement(sql);
@@ -42,17 +32,12 @@ public class RequestDAO {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}
+		
 		return null;
 	}
 
-	public ERS_Request modifyRequest(String username, String passcode, ERS_Request oldRequest) {
-		// Completed, not tested
-		// Verifies user has permission, updates request in the database.
-		int role = getRole(username, passcode);
-		if (role == 2) {
-			try (Connection conn = ConnectToDB.getConnection(role)) {
-				int id = getID(username, passcode);
+	public ERS_Request modifyRequest(int id, ERS_Request oldRequest) {
+			try (Connection conn = ConnectToDB.getConnection(2)) {
 				String sql = "update ers_reimbursement set reimb_resolved = current_timestamp, "
 						+ "reimb_resolver = ?, reimb_status = ? where reimb_id = ? returning *;";
 				PreparedStatement statement = conn.prepareStatement(sql);
@@ -67,39 +52,30 @@ public class RequestDAO {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}
 		return null;
 	}
 
-	public List<ERS_Request> viewRequest(String username, String passcode) { // Completed, not tested
-		// Gets the user role, and runs the appropriate select.
-		int role = getRole(username, passcode);
+	public List<ERS_Request> viewRequest(User user) {
+		int role = user.getRole();
 		try (Connection conn = ConnectToDB.getConnection(role)) {
-			String sql = "select ers_user_id from ers_users where ers_username = ?;";
-			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.setString(1, username);
-			ResultSet resultSet = statement.executeQuery();
-			while (resultSet.next()) {
-				role = resultSet.getInt("ers_user_id");
-			}
 			if (role == 2) {
-				sql = "select * from ers_reimbursement";
-				PreparedStatement statement1 = conn.prepareStatement(sql);
-				ResultSet resultSet1 = statement1.executeQuery();
+				String sql = "select * from ers_reimbursement";
+				PreparedStatement statement = conn.prepareStatement(sql);
+				ResultSet resultSet = statement.executeQuery();
 				List<ERS_Request> Requests = new ArrayList<>();
-				while (resultSet1.next()) {
-					ERS_Request request = unpack(resultSet1);
+				while (resultSet.next()) {
+					ERS_Request request = unpack(resultSet);
 					Requests.add(request);
 				}
 				return Requests;
 			} else if (role == 1) {
-
-				sql = "select * from ers_reimbursement where reimb_author = ?;";
-				PreparedStatement statement1 = conn.prepareStatement(sql);
-				ResultSet resultSet1 = statement1.executeQuery();
+				String sql = "select * from ers_reimbursement where reimb_author = ?;";
+				PreparedStatement statement = conn.prepareStatement(sql);
+				statement.setInt(1, Integer.parseInt(user.getUsername()));
+				ResultSet resultSet = statement.executeQuery();
 				List<ERS_Request> Requests = new ArrayList<>();
-				while (resultSet1.next()) {
-					ERS_Request request = unpack(resultSet1);
+				while (resultSet.next()) {
+					ERS_Request request = unpack(resultSet);
 					Requests.add(request);
 				}
 				return Requests;
@@ -110,13 +86,28 @@ public class RequestDAO {
 		return null;
 	}
 
-	public int getRole(String username, String passcode) { // Completed, tested
-		// Authorizes the above commands by determining the user's role.
+	public int getRole(String username) {
 		try (Connection conn = ConnectToDB.getConnection(1)) {
-			String sql = "select user_role_id from ers_users where ers_username = ? and ers_password = ?;";
+			String sql = "select user_role_id from ers_users where ers_username = ?;";
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, username);
-			statement.setString(2, passcode);
+			ResultSet resultSet = statement.executeQuery();
+			int role = 0;
+			while (resultSet.next()) {
+				role = resultSet.getInt("user_role_id");
+			}
+			return role;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	public int getVerifiedRole(String username, String password) {
+		try (Connection conn = ConnectToDB.getConnection(1)) {
+			String sql = "select user_role_id from ers_users where ers_username = ? and ers_password = password;";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, username);
+			statement.setString(2, password);
 			ResultSet resultSet = statement.executeQuery();
 			int role = 0;
 			while (resultSet.next()) {
@@ -129,13 +120,12 @@ public class RequestDAO {
 		return 0;
 	}
 
-	public int getID(String username, String passcode) { // Completed, tested
+	public int getID(String username) { // Completed, tested
 		// Authorizes the above commands by determining the user's role.
 		try (Connection conn = ConnectToDB.getConnection(1)) {
-			String sql = "select ers_user_id from ers_users where ers_username = ? and ers_password = ?;";
+			String sql = "select ers_user_id from ers_users where ers_username = ?;";
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, username);
-			statement.setString(2, passcode);
 			ResultSet resultSet = statement.executeQuery();
 			int id = 0;
 			while (resultSet.next()) {
@@ -157,7 +147,7 @@ public class RequestDAO {
 			Timestamp submitted = resultSet.getTimestamp("reimb_submitted");
 			Timestamp resolved = resultSet.getTimestamp("reimb_resolved");
 			String description = resultSet.getString("reimb_description");
-			byte[] receiptArray = resultSet.getBytes("reimb_receipt");
+//			byte[] receiptArray = resultSet.getBytes("reimb_receipt");
 //			BufferedImage receipt = ImageIO.read(new ByteArrayInputStream(receiptArray));
 			int author = resultSet.getInt("reimb_author");
 			Integer resolver = resultSet.getInt("reimb_resolver");
