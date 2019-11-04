@@ -40,7 +40,6 @@ public class SessionServlet extends HttpServlet {
 		String username = user.getUsername();
 		String password = user.getPassword();
 		HttpSession session = request.getSession();
-		
 //		Cookie cookie = new Cookie("username", username);
 //		Cookie c2 = new Cookie("password", password);
 //		response.addCookie(cookie);
