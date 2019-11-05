@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.daos.RequestDAO;
 import com.revature.models.User;
+import com.revature.service.PasswordHasher;
 
 public class SessionServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -36,6 +37,7 @@ public class SessionServlet extends HttpServlet {
 		String username = user.getUsername();
 		String password = user.getPassword();
 		RequestDAO dao = new RequestDAO();
+		password = PasswordHasher.getSecurePassword(password, username);
 		int role = dao.getVerifiedRole(username, password);
 		Integer userid = dao.getID(username);
 		username = userid.toString();

@@ -35,6 +35,7 @@ create table ERS_Reimbursement(
 	reimb_type integer references ERS_Reimbursement_Type(reimb_type_id)
 );
 drop table ers_reimbursement;
+drop table ers_users;
 
 insert into ers_reimbursement_type(reimb_type_id, reimb_type) values
 	(1, 'Lodging'),
@@ -59,32 +60,23 @@ insert into ers_users (ers_user_id, ers_username, ers_password, user_first_name,
 	(5, 'EWeber', 'testpass5', 'Edward', 'Weber', 'edwardweber@email.com', 1),
 	(6, 'FCobbler', 'testpass6', 'Florence', 'Cobbler', 'florencecobbler@email.com', 1),
 	(7, 'GChandler', 'testpass7', 'George', 'Chandler', 'georgechandler@email.com', 1);
+alter table ers_users add salt bytea;
+select * from ers_users;
+update ers_users set salt =  where ers_user_id = 1;
+update ers_users set salt = '[B@4e25154f' where ers_user_id = 2;
+update ers_users set salt = '[B@3e609a82' where ers_user_id = 3;
+update ers_users set salt = '[B@8f6d0afd' where ers_user_id = 4;
+update ers_users set salt = '[B@e6c50f58' where ers_user_id = 5;
+update ers_users set salt = '[B@d2b4be8f' where ers_user_id = 6;
+update ers_users set salt = '[B@e7842059' where ers_user_id = 7;
 
---create role employee LOGIN password 'userpass';
---grant insert on table ERS_Reimbursement to employee;
---grant select on table ERS_Reimbursement to employee;
-grant select on table ers_users to employee;
-grant all privileges on all sequences in schema public to finance_manager;
-ALTER ROLE finance_manager NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;
---create role finance_manager password 'manager_access';
---grant update on table ERS_Reimbursement to finance_manager;
---grant insert on table ERS_Reimbursement to finance_manager;
---grant select on table ERS_Reimbursement to finance_manager;
-grant select on table ers_users to finance_manager;
 
--- Commands
--- select ers_user_id from ers_users where ers_username = ? and ers_password = ?;
-select ers_user_id from ers_users where ers_username = 'ATanner' and ers_password = 'testpass1';
--- select * from ers_reimbursement where reimb_author = ?;
-select * from ers_reimbursement where reimb_author = 1;
---insert into ERS_Reimbursement (reimb_amount, reimb_description, reimb_author, reimb_type) values (?, ?, ?, ?);
-insert into ERS_Reimbursement (reimb_amount, reimb_description, reimb_author, reimb_type) values 
-(10.00/*::money*/, 'This is the description', 1, 2);
-select * from ers_reimbursement;
---update ers_reimbursement set reimb_resolved = current_timestamp, reimb_resolver = ?, reimb_status = ? where reimb_id = ?;
-update ers_reimbursement set 
-reimb_resolved = current_timestamp, 
-reimb_resolver = 2, 
-reimb_status = 2
-where reimb_id = 1;
+update ers_users set ers_password = 'a58b7bf042406f19bfe32cc5c38efc48' where ers_user_id = 1;
+update ers_users set ers_password = 'cc2882e1e759022e7789311a192535cd' where ers_user_id = 2;
+update ers_users set ers_password = 'c657eecaa559ce1f15f1a7de32997574' where ers_user_id = 3;
+update ers_users set ers_password = 'b08484d975a0300ee5157bb74c238518' where ers_user_id = 4;
+update ers_users set ers_password = '' where ers_user_id = 5;
+update ers_users set ers_password = '' where ers_user_id = 6;
+update ers_users set ers_password = '' where ers_user_id = 7;
 
+ALTER ROLE finance_manager INHERIT LOGIN;

@@ -104,7 +104,7 @@ public class RequestDAO {
 	}
 	public int getVerifiedRole(String username, String password) {
 		try (Connection conn = ConnectToDB.getConnection(1)) {
-			String sql = "select user_role_id from ers_users where ers_username = ? and ers_password = password;";
+			String sql = "select user_role_id from ers_users where ers_username = ? and ers_password = ?;";
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, username);
 			statement.setString(2, password);
