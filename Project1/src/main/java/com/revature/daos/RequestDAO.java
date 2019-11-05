@@ -37,11 +37,24 @@ public class RequestDAO {
 	}
 
 	public ERS_Request modifyRequest(int id, ERS_Request oldRequest) {
+		int resolverID = 0;
+		try (Connection conn = ConnectToDB.getConnection(2)) {
+			String sql = "select ers_user_id from ers_users where ers_username = ?;";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, oldRequest.getResolver());
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				resolverID = resultSet.getInt("ers_user_id");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 			try (Connection conn = ConnectToDB.getConnection(2)) {
 				String sql = "update ers_reimbursement set reimb_resolved = current_timestamp, "
 						+ "reimb_resolver = ?, reimb_status = ? where reimb_id = ? returning *;";
 				PreparedStatement statement = conn.prepareStatement(sql);
-				statement.setInt(1, oldRequest.getResolver());
+				statement.setInt(1, resolverID);
 				statement.setInt(2, oldRequest.getStatus());
 				statement.setInt(3, id);
 				ResultSet resultSet = statement.executeQuery();
@@ -137,29 +150,43 @@ public class RequestDAO {
 		}
 		return 0;
 	}
-
-	private ERS_Request unpack(ResultSet resultSet) { // Completed, not tested
-		try {
-			int id = resultSet.getInt("reimb_id");
-//			String amountString = resultSet.getString("reimb_amount");
-//			amountString = amountString.substring(1).replace(",", "");
-			BigDecimal amount = resultSet.getBigDecimal("reimb_amount");
-			Timestamp submitted = resultSet.getTimestamp("reimb_submitted");
-			Timestamp resolved = resultSet.getTimestamp("reimb_resolved");
-			String description = resultSet.getString("reimb_description");
-//			byte[] receiptArray = resultSet.getBytes("reimb_receipt");
-//			BufferedImage receipt = ImageIO.read(new ByteArrayInputStream(receiptArray));
-			int author = resultSet.getInt("reimb_author");
-			Integer resolver = resultSet.getInt("reimb_resolver");
-			int status = resultSet.getInt("reimb_status");
-			int type = resultSet.getInt("reimb_type");
-
-			ERS_Request request = new ERS_Request(id, amount, submitted, resolved, description, null, author, resolver,
-					status, type);
-			return request;
+	public String getName(Integer id) { // Completed, tested
+		// Authorizes the above commands by determining the user's role.
+		try (Connection conn = ConnectToDB.getConnection(1)) {
+			String sql = "select ers_username from ers_users where ers_user_id = ?;";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setInt(1, id);
+			ResultSet resultSet = statement.executeQuery();
+			String name = "";
+			while (resultSet.next()) {
+				name = resultSet.getString("ers_username");
+			}
+			return name;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return null;
 		}
+		return "";
+	}
+	private ERS_Request unpack(ResultSet resultSet) { // Completed, not tested
+		int id = 0; BigDecimal amount=null;Timestamp submitted =null;Timestamp resolved =null;
+		String description = ""; Integer authorid=0; Integer resolverid = 0; int status = 0; int type = 0;
+		try {
+			id = resultSet.getInt("reimb_id");
+			amount = resultSet.getBigDecimal("reimb_amount");
+			submitted = resultSet.getTimestamp("reimb_submitted");
+			resolved = resultSet.getTimestamp("reimb_resolved");
+			description = resultSet.getString("reimb_description");
+			authorid = resultSet.getInt("reimb_author");
+			resolverid = resultSet.getInt("reimb_resolver");
+			status = resultSet.getInt("reimb_status");
+			type = resultSet.getInt("reimb_type");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		String author = getName(authorid);
+		String resolver = getName(resolverid);
+		ERS_Request request = new ERS_Request(id, amount, submitted, resolved, description, null, author, resolver,
+				status, type);
+		return request;
 	}
 }

@@ -62,21 +62,18 @@ insert into ers_users (ers_user_id, ers_username, ers_password, user_first_name,
 	(7, 'GChandler', 'testpass7', 'George', 'Chandler', 'georgechandler@email.com', 1);
 alter table ers_users add salt bytea;
 select * from ers_users;
-update ers_users set salt =  where ers_user_id = 1;
-update ers_users set salt = '[B@4e25154f' where ers_user_id = 2;
-update ers_users set salt = '[B@3e609a82' where ers_user_id = 3;
-update ers_users set salt = '[B@8f6d0afd' where ers_user_id = 4;
-update ers_users set salt = '[B@e6c50f58' where ers_user_id = 5;
-update ers_users set salt = '[B@d2b4be8f' where ers_user_id = 6;
-update ers_users set salt = '[B@e7842059' where ers_user_id = 7;
 
 
-update ers_users set ers_password = 'a58b7bf042406f19bfe32cc5c38efc48' where ers_user_id = 1;
-update ers_users set ers_password = 'cc2882e1e759022e7789311a192535cd' where ers_user_id = 2;
-update ers_users set ers_password = 'c657eecaa559ce1f15f1a7de32997574' where ers_user_id = 3;
-update ers_users set ers_password = 'b08484d975a0300ee5157bb74c238518' where ers_user_id = 4;
-update ers_users set ers_password = '' where ers_user_id = 5;
-update ers_users set ers_password = '' where ers_user_id = 6;
-update ers_users set ers_password = '' where ers_user_id = 7;
+update ers_users set ers_password = 'de3d664945ab688f08098e1e8bf44030' where ers_user_id = 1;
+update ers_users set ers_password = '4a2e2f8bf2001011fa70467e3c3121af' where ers_user_id = 2;
+update ers_users set ers_password = '77964914a992a51c42432db074cf6bb6' where ers_user_id = 3;
+update ers_users set ers_password = 'e3fbfa0cead432f25fa9283531ee40cc' where ers_user_id = 4;
+update ers_users set ers_password = 'fc963a41e725f099c9d4675343eecd20' where ers_user_id = 5;
+update ers_users set ers_password = '0f477126de429681fb9b47be1d57d03d' where ers_user_id = 6;
+update ers_users set ers_password = '48e122f76557c7b62996c97f25f6ece9' where ers_user_id = 7;
 
 ALTER ROLE finance_manager INHERIT LOGIN;
+grant update on ers_users to finance_manager;
+
+
+select salt from ers_users where ers_username = 'CBaker';

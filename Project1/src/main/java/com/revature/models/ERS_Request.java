@@ -11,8 +11,8 @@ public class ERS_Request {
 	private Timestamp resolved;
 	private String description;
 	private BufferedImage receipt;
-	private int author;
-	private Integer resolver;
+	private String author;
+	private String resolver;
 	private int status;
 	private int type;
 
@@ -64,19 +64,19 @@ public class ERS_Request {
 		this.receipt = recipt;
 	}
 
-	public int getAuthor() {
+	public String getAuthor() {
 		return author;
 	}
 
-	public void setAuthor(int author) {
+	public void setAuthor(String author) {
 		this.author = author;
 	}
 
-	public Integer getResolver() {
+	public String getResolver() {
 		return resolver;
 	}
 
-	public void setResolver(Integer resolver) {
+	public void setResolver(String resolver) {
 		this.resolver = resolver;
 	}
 
@@ -96,76 +96,9 @@ public class ERS_Request {
 		this.type = type;
 	}
 
-	@Override
-	public String toString() {
-		return "ERS_Request [id=" + id + ", amount=" + amount + ", submitted=" + submitted + ", resolved=" + resolved
-				+ ", description=" + description + ", author=" + author + ", resolver=" + resolver + ", status="
-				+ status + ", type=" + type + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((amount == null) ? 0 : amount.hashCode());
-		result = prime * result + author;
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + id;
-		result = prime * result + ((resolved == null) ? 0 : resolved.hashCode());
-		result = prime * result + ((resolver == null) ? 0 : resolver.hashCode());
-		result = prime * result + status;
-		result = prime * result + ((submitted == null) ? 0 : submitted.hashCode());
-		result = prime * result + type;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ERS_Request other = (ERS_Request) obj;
-		if (amount == null) {
-			if (other.amount != null)
-				return false;
-		} else if (!amount.equals(other.amount))
-			return false;
-		if (author != other.author)
-			return false;
-		if (description == null) {
-			if (other.description != null)
-				return false;
-		} else if (!description.equals(other.description))
-			return false;
-		if (id != other.id)
-			return false;
-		if (resolved == null) {
-			if (other.resolved != null)
-				return false;
-		} else if (!resolved.equals(other.resolved))
-			return false;
-		if (resolver == null) {
-			if (other.resolver != null)
-				return false;
-		} else if (!resolver.equals(other.resolver))
-			return false;
-		if (status != other.status)
-			return false;
-		if (submitted == null) {
-			if (other.submitted != null)
-				return false;
-		} else if (!submitted.equals(other.submitted))
-			return false;
-		if (type != other.type)
-			return false;
-		return true;
-	}
 
 	public ERS_Request(int id, BigDecimal amount, Timestamp submitted, Timestamp resolved, String description,
-			BufferedImage receipt, int author, Integer resolver, int status, int type) {
+			BufferedImage receipt, String author, String resolver, int status, int type) {
 		super();
 		this.id = id;
 		this.amount = amount;
