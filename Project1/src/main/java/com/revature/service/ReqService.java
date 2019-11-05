@@ -9,11 +9,11 @@ import com.revature.models.User;
 public class ReqService {
 	RequestDAO dao = new RequestDAO();
 	
-	public ERS_Request save(ERS_Request req, int userid) {
+	public ERS_Request save(ERS_Request req, String username) {
 		if (req.getResolver() == null) {
-			req = dao.createRequest(userid, req);
+			req = dao.createRequest(username, req);
 		} else {
-			req = dao.modifyRequest(userid, req);
+			req = dao.modifyRequest(username, req);
 		}
 		return req;
 		

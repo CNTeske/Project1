@@ -15,7 +15,8 @@ import com.revature.models.User;
 
 public class RequestDAO {
 
-	public ERS_Request createRequest(int id, ERS_Request newRequest) {
+	public ERS_Request createRequest(String username, ERS_Request newRequest) {
+		int id = getID(username);
 			try (Connection conn = ConnectToDB.getConnection(1)) {
 				String sql = "insert into ERS_Reimbursement (reimb_amount, reimb_description, "
 						+ "reimb_author, reimb_type) values (?, ?, ?, ?) returning *;";
@@ -36,8 +37,9 @@ public class RequestDAO {
 		return null;
 	}
 
-	public ERS_Request modifyRequest(int id, ERS_Request oldRequest) {
+	public ERS_Request modifyRequest(String username, ERS_Request oldRequest) {
 		int resolverID = 0;
+		int id = getID(username);
 		try (Connection conn = ConnectToDB.getConnection(2)) {
 			String sql = "select ers_user_id from ers_users where ers_username = ?;";
 			PreparedStatement statement = conn.prepareStatement(sql);
