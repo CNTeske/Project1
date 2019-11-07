@@ -1,6 +1,5 @@
 package com.revature.daos;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,7 +20,7 @@ public class RequestDAO {
 				String sql = "insert into ERS_Reimbursement (reimb_amount, reimb_description, "
 						+ "reimb_author, reimb_type) values (?, ?, ?, ?) returning *;";
 				PreparedStatement statement = conn.prepareStatement(sql);
-				statement.setBigDecimal(1, newRequest.getAmount());
+				statement.setDouble(1, newRequest.getAmount());
 				statement.setString(2, newRequest.getDescription());
 				statement.setInt(3, id);
 				statement.setInt(4, newRequest.getType());
@@ -72,9 +71,10 @@ public class RequestDAO {
 
 	public List<ERS_Request> viewRequest(User user) {
 		int role = user.getRole();
+		int authorid = getID(user.getUsername());
 		try (Connection conn = ConnectToDB.getConnection(role)) {
 			if (role == 2) {
-				String sql = "select * from ers_reimbursement";
+				String sql = "select * from ers_reimbursement;";
 				PreparedStatement statement = conn.prepareStatement(sql);
 				ResultSet resultSet = statement.executeQuery();
 				List<ERS_Request> Requests = new ArrayList<>();
@@ -86,7 +86,7 @@ public class RequestDAO {
 			} else if (role == 1) {
 				String sql = "select * from ers_reimbursement where reimb_author = ?;";
 				PreparedStatement statement = conn.prepareStatement(sql);
-				statement.setInt(1, Integer.parseInt(user.getUsername()));
+				statement.setInt(1, authorid);
 				ResultSet resultSet = statement.executeQuery();
 				List<ERS_Request> Requests = new ArrayList<>();
 				while (resultSet.next()) {
@@ -170,11 +170,11 @@ public class RequestDAO {
 		return "";
 	}
 	private ERS_Request unpack(ResultSet resultSet) { // Completed, not tested
-		int id = 0; BigDecimal amount=null;Timestamp submitted =null;Timestamp resolved =null;
+		int id = 0; double amount=0;Timestamp submitted =null;Timestamp resolved =null;
 		String description = ""; Integer authorid=0; Integer resolverid = 0; int status = 0; int type = 0;
 		try {
 			id = resultSet.getInt("reimb_id");
-			amount = resultSet.getBigDecimal("reimb_amount");
+			amount = resultSet.getDouble("reimb_amount");
 			submitted = resultSet.getTimestamp("reimb_submitted");
 			resolved = resultSet.getTimestamp("reimb_resolved");
 			description = resultSet.getString("reimb_description");

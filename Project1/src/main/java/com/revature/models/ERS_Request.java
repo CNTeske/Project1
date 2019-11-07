@@ -1,12 +1,11 @@
 package com.revature.models;
 
 import java.awt.image.BufferedImage;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 public class ERS_Request {
 	private int id;
-	private BigDecimal amount;
+	private double amount;
 	private Timestamp submitted;
 	private Timestamp resolved;
 	private String description;
@@ -24,11 +23,11 @@ public class ERS_Request {
 		this.id = id;
 	}
 
-	public BigDecimal getAmount() {
+	public double getAmount() {
 		return amount;
 	}
 
-	public void setAmount(BigDecimal amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 
@@ -97,7 +96,7 @@ public class ERS_Request {
 	}
 
 
-	public ERS_Request(int id, BigDecimal amount, Timestamp submitted, Timestamp resolved, String description,
+	public ERS_Request(int id, double amount, Timestamp submitted, Timestamp resolved, String description,
 			BufferedImage receipt, String author, String resolver, int status, int type) {
 		super();
 		this.id = id;

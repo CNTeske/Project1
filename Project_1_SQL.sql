@@ -24,7 +24,7 @@ create table ERS_Reimbursement_Status(
 
 create table ERS_Reimbursement(
 	reimb_id serial primary key,
-	reimb_amount money,
+	reimb_amount numeric,
 	reimb_submitted timestamp default current_timestamp,
 	reimb_resolved timestamp default null,
 	reimb_description varchar(250),
@@ -74,6 +74,8 @@ update ers_users set ers_password = '48e122f76557c7b62996c97f25f6ece9' where ers
 
 ALTER ROLE finance_manager INHERIT LOGIN;
 grant update on ers_users to finance_manager;
-
+grant update on ers_reimbursement to finance_manager;
+grant select on ers_reimbursement to finance_manager;
+grant select on ers_reimbursement to employee;
 
 select salt from ers_users where ers_username = 'CBaker';
