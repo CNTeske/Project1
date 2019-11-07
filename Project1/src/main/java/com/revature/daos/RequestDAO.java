@@ -38,7 +38,7 @@ public class RequestDAO {
 
 	public ERS_Request modifyRequest(String username, ERS_Request oldRequest) {
 		int resolverID = 0;
-		int id = getID(username);
+		int id = oldRequest.getId();
 		try (Connection conn = ConnectToDB.getConnection(2)) {
 			String sql = "select ers_user_id from ers_users where ers_username = ?;";
 			PreparedStatement statement = conn.prepareStatement(sql);

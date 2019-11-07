@@ -13,7 +13,7 @@ public class ReqService {
 		if (req.getResolver() == null) {
 			req = dao.createRequest(username, req);
 		} else {
-			req = dao.modifyRequest(username, req);
+			req = dao.modifyRequest(req.getResolver(), req);
 		}
 		return req;
 		
