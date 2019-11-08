@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.daos.RequestDAO;
@@ -36,6 +37,7 @@ public class SessionServlet extends HttpServlet {
 		User user = om.readValue(request.getReader(), User.class);
 		String username = user.getUsername();
 		String password = user.getPassword();
+		
 		RequestDAO dao = new RequestDAO();
 		password = PasswordHasher.getSecurePassword(password, username);
 		int role = dao.getVerifiedRole(username, password);

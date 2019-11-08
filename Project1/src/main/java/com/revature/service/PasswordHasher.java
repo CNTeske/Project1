@@ -39,7 +39,7 @@ public class PasswordHasher {
 	}
 
 	public static byte[] gBytes(String username) {
-		try (Connection conn = ConnectToDB.getConnection(2)) {
+		try (Connection conn = ConnectToDB.getConnection(1)) {
 			String sql = "select salt from ers_users where ers_username=?;";
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, username);

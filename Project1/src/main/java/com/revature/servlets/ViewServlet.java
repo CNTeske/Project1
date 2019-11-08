@@ -24,12 +24,13 @@ public class ViewServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-	public void service(HttpServletRequest request, 
-            HttpServletResponse response) throws ServletException, IOException {     
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Headers", "*");
-        super.service(request, response);
+
+	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers", "*");
+		super.service(request, response);
 	}
+
 	ReqService reqService = new ReqService();
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -38,5 +39,5 @@ public class ViewServlet extends HttpServlet {
 		User user = om.readValue(request.getReader(), User.class);
 		List<ERS_Request> reqList = reqService.view(user);
 		om.writeValue(response.getWriter(), reqList);
-}
+	}
 }

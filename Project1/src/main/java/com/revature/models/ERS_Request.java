@@ -1,6 +1,7 @@
 package com.revature.models;
 
 import java.awt.image.BufferedImage;
+import java.net.URL;
 import java.sql.Timestamp;
 
 public class ERS_Request {
@@ -9,7 +10,7 @@ public class ERS_Request {
 	private Timestamp submitted;
 	private Timestamp resolved;
 	private String description;
-	private BufferedImage receipt;
+	private String receipt;
 	private String author;
 	private String resolver;
 	private int status;
@@ -55,12 +56,12 @@ public class ERS_Request {
 		this.description = description;
 	}
 
-	public BufferedImage getReceipt() {
+	public String getReceipt() {
 		return receipt;
 	}
 
-	public void setReceipt(BufferedImage recipt) {
-		this.receipt = recipt;
+	public void setReceipt(String receipt) {
+		this.receipt = receipt;
 	}
 
 	public String getAuthor() {
@@ -97,7 +98,7 @@ public class ERS_Request {
 
 
 	public ERS_Request(int id, double amount, Timestamp submitted, Timestamp resolved, String description,
-			BufferedImage receipt, String author, String resolver, int status, int type) {
+			String receipt, String author, String resolver, int status, int type) {
 		super();
 		this.id = id;
 		this.amount = amount;

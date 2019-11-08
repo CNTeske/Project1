@@ -7,17 +7,22 @@
 		<servlet-name>ERSServlet</servlet-name>
 		<servlet-class>com.revature.servlets.ERSServlet</servlet-class>
 	</servlet>
-
-	<servlet>
-		<servlet-name>SessionServlet</servlet-name>
-		<servlet-class>com.revature.servlets.SessionServlet</servlet-class>
-	</servlet>
-
+	
 	<servlet>
 		<servlet-name>ViewServlet</servlet-name>
 		<servlet-class>com.revature.servlets.ViewServlet</servlet-class>
 	</servlet>
 
+	<servlet>
+		<servlet-name>SessionServlet</servlet-name>
+		<servlet-class>com.revature.servlets.SessionServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>S3Upload</servlet-name>
+		<display-name>S3Upload</display-name>
+		<description></description>
+		<servlet-class>com.revature.servlets.S3Upload</servlet-class>
+	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>ViewServlet</servlet-name>
@@ -33,5 +38,10 @@
 		<servlet-name>ERSServlet</servlet-name>
 		<url-pattern>/ers</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>S3Upload</servlet-name>
+		<url-pattern>/S3Upload</url-pattern>
+	</servlet-mapping>
+
 
 </web-app>
