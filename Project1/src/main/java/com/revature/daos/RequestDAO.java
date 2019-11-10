@@ -75,7 +75,7 @@ public class RequestDAO {
 		int authorid = getID(user.getUsername());
 		try (Connection conn = ConnectToDB.getConnection(role)) {
 			if (role == 2) {
-				String sql = "select * from ers_reimbursement order by reimb_submitted ASC;";
+				String sql = "select * from ers_reimbursement order by reimb_submitted DESC;";
 				PreparedStatement statement = conn.prepareStatement(sql);
 				ResultSet resultSet = statement.executeQuery();
 				List<ERS_Request> Requests = new ArrayList<>();
@@ -85,7 +85,7 @@ public class RequestDAO {
 				}
 				return Requests;
 			} else if (role == 1) {
-				String sql = "select * from ers_reimbursement where reimb_author = ? order by reimb_submitted ASC;";
+				String sql = "select * from ers_reimbursement where reimb_author = ? order by reimb_submitted DESC;";
 				PreparedStatement statement = conn.prepareStatement(sql);
 				statement.setInt(1, authorid);
 				ResultSet resultSet = statement.executeQuery();
