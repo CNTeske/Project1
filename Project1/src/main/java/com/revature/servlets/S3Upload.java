@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.sql.Date;
 import java.time.LocalDateTime;
 
 import javax.servlet.ServletException;
@@ -12,12 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.AWSCredentialsProviderChain;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
-import com.amazonaws.services.mediastoredata.model.PutObjectResult;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -45,7 +40,6 @@ public class S3Upload extends HttpServlet {
 		ObjectMapper om = new ObjectMapper();
 		
 		BasicAWSCredentials cred = new BasicAWSCredentials((System.getenv("AWS_ACCESS_KEY")), System.getenv("AWS_SECRET_KEY"));
-		
 
 		AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
 				.withCredentials(new AWSStaticCredentialsProvider(cred))
